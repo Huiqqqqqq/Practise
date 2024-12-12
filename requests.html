@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявления</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Подача нового заявления</h1>
+        <form id="newRequestForm">
+            <input type="text" id="carNumber" placeholder="Номер автомобиля" required>
+            <textarea id="violationDescription" placeholder="Описание нарушения" required></textarea>
+            <button type="submit">Подать заявление</button>
+        </form>
+        
+        <h2>Мои заявления</h2>
+        <ul id="requestsList"></ul>
+    </div>
+
+    <script>
+        function displayRequests() {
+            const requestsList = document.getElementById('requestsList');
+            requestsList.innerHTML = ''; 
+
+            const requests = JSON.parse(localStorage.getItem('requests')) || [];
+
+            requests.forEach(request => {
+                const li = document.createElement('li');
+                li.textContent = `Номер автомобиля: ${request.carNumber}, Описание нарушения: ${request.violationDescription}`;
+                requestsList.appendChild(li);
+            });
+        }
+
+        document.getElementById('newRequestForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const carNumber = document.getElementById('carNumber').value.trim();
+            const violationDescription = document.getElementById('violationDescription').value.trim();
+
+            const requests = JSON.parse(localStorage.getItem('requests')) || [];
+
+            requests.push({ carNumber, violationDescription });
+
+            localStorage.setItem('requests', JSON.stringify(requests));
+
+            document.getElementById('newRequestForm').reset();
+
+            displayRequests();
+        });
+
+        window.onload = displayRequests;
+    </script>
+</body>
+</html>

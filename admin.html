@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Авторизация администратора</h1>
+        <form id="adminLoginForm">
+            <input type="text" id="adminUsername" placeholder="Имя пользователя" required>
+            <input type="password" id="adminPassword" placeholder="Пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+
+        <h2>Заявления</h2>
+        <ul id="adminRequestsList"></ul>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const adminUsername = document.getElementById('adminUsername').value.trim();
+            const adminPassword = document.getElementById('adminPassword').value.trim();
+
+            if (adminUsername === 'admin' && adminPassword === 'password') {
+                displayRequests();
+            } else {
+                alert('Неверное имя пользователя или пароль.');
+            }
+        });
+
+        function displayRequests() {
+            const adminRequestsList = document.getElementById('adminRequestsList');
+            adminRequestsList.innerHTML = ''; 
+
+            const requests = JSON.parse(localStorage.getItem('requests')) || [];
+
+            requests.forEach(request => {
+                const li = document.createElement('li');
+                li.textContent = `Номер автомобиля: ${request.carNumber}, Описание нарушения: ${request.violationDescription}`;
+                adminRequestsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
